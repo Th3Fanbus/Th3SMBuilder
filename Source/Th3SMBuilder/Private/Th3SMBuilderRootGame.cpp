@@ -30,7 +30,7 @@ void UTh3SMBuilderRootGame::DispatchLifecycleEvent(ELifecyclePhase Phase)
 
 	UE_LOG(LogTh3SMBuilderCpp, Display, TEXT("Dispatching Phase %s on %s"), *LifecyclePhaseToString(Phase), *this->GetPathName());
 
-#if 0
+#if !0
 	/* TODO: Unlocking the schematic seems to be really slow */
 	if (Phase == ELifecyclePhase::POST_INITIALIZATION) {
 		AFGSchematicManager* SchematicManager = AFGSchematicManager::Get(GetWorld());

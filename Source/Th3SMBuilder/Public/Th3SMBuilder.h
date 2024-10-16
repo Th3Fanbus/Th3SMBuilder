@@ -9,11 +9,6 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTh3SMBuilderCpp, Log, All);
 
 class FTh3SMBuilderModule : public IModuleInterface
 {
-public:
-
-	/** IModuleInterface implementation */
-	virtual void StartupModule() override;
-	virtual void ShutdownModule() override;
 };
 
 namespace Th3

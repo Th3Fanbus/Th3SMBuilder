@@ -12,8 +12,6 @@ class TH3SMBUILDER_API ASMBuilderPhotoBooth : public AActor
 	GENERATED_BODY()
 public:
 	ASMBuilderPhotoBooth();
-	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	FSlateBrush RenderSurfaceMaterial(UMaterialInterface* Material, int32 Size);

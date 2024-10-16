@@ -3,6 +3,8 @@
 #include "Th3SMBuilderSubsystem.h"
 #include "Algo/AllOf.h"
 #include "Algo/Transform.h"
+#include "Kismet/GameplayStatics.h"
+#include "MaterialDomain.h"
 
 ATh3SMBuilderSubsystem* ATh3SMBuilderSubsystem::Get(UObject* WorldContext)
 {
@@ -50,35 +52,12 @@ TArray<UMaterialInterface*> ATh3SMBuilderSubsystem::GetMaterials()
 	}
 }
 
-static FString MaterialDomainToString(const EMaterialDomain Domain)
-{
-	switch (Domain) {
-	case MD_Surface:
-		return TEXT("Surface");
-	case MD_DeferredDecal:
-		return TEXT("Deferred Decal");
-	case MD_LightFunction:
-		return TEXT("Light Function");
-	case MD_Volume:
-		return TEXT("Volume");
-	case MD_PostProcess:
-		return TEXT("Post Process");
-	case MD_UI:
-		return TEXT("User Interface");
-	case MD_RuntimeVirtualTexture:
-		return TEXT("Runtime Virtual Texture");
-	default:
-		return FString::Printf(TEXT("Unknown (%d)"), Domain);
-	}
-}
-
 UMaterialEntry* ATh3SMBuilderSubsystem::MakeMaterialEntry(UMaterialInterface* Material, ASMBuilderPhotoBooth* PhotoBooth) const
 {
 	const EMaterialDomain Domain = Material->GetBaseMaterial()->MaterialDomain;
-	//UE_LOG(LogTh3SMBuilderCpp, Display, TEXT("Making %s Material entry for '%s'"), *MaterialDomainToString(Domain), *Material->GetPathName());
+	//UE_LOG(LogTh3SMBuilderCpp, Display, TEXT("Making %s Material entry for '%s'"), *UEnum::GetValueAsString(Domain), *Material->GetPathName());
 
 	UMaterialEntry* MaterialEntry = NewObject<UMaterialEntry>();
-	fgcheck(MaterialEntry);
 
 	switch (Domain) {
 	case MD_Surface:
@@ -95,7 +74,7 @@ UMaterialEntry* ATh3SMBuilderSubsystem::MakeMaterialEntry(UMaterialInterface* Ma
 
 void ATh3SMBuilderSubsystem::BeginPlay()
 {
-	AModSubsystem::BeginPlay();
+	Super::BeginPlay();
 
 	TArray<UMaterialInterface*> MaterialInterfaces = GetMaterials();
 
@@ -103,13 +82,13 @@ void ATh3SMBuilderSubsystem::BeginPlay()
 		UE_LOG(LogTh3SMBuilderCpp, Error, TEXT("No materials to process"));
 		return;
 	}
-	UE_LOG(LogTh3SMBuilderCpp, Warning, TEXT("Sorting %d materials..."), MaterialInterfaces.Num());
+	UE_LOG(LogTh3SMBuilderCpp, Display, TEXT("Sorting %d materials..."), MaterialInterfaces.Num());
 
 	Algo::Sort(MaterialInterfaces, [](const UMaterialInterface* A, const UMaterialInterface* B) {
 		return A->GetFName().Compare(B->GetFName()) < 0;
 	});
 
-	UE_LOG(LogTh3SMBuilderCpp, Warning, TEXT("Processing %d materials..."), MaterialInterfaces.Num());
+	UE_LOG(LogTh3SMBuilderCpp, Display, TEXT("Processing %d materials..."), MaterialInterfaces.Num());
 
 	ASMBuilderPhotoBooth* PhotoBooth = Cast<ASMBuilderPhotoBooth>(GetWorld()->SpawnActor(PhotoBoothClass.Get()));
 	if (not PhotoBooth) {
@@ -119,7 +98,7 @@ void ATh3SMBuilderSubsystem::BeginPlay()
 	for (UMaterialInterface* Material : MaterialInterfaces) {
 		MaterialEntries.Add(Material, MakeMaterialEntry(Material, PhotoBooth));
 	}
-	UE_LOG(LogTh3SMBuilderCpp, Warning, TEXT("Done processing materials"));
+	UE_LOG(LogTh3SMBuilderCpp, Display, TEXT("Done processing materials"));
 
 	bEntriesReady = true;
 	PhotoBooth->Destroy();
