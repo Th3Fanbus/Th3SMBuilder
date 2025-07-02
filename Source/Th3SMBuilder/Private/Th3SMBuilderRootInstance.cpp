@@ -66,7 +66,7 @@ void UTh3SMBuilderRootInstance::MakeBuildable(UStaticMesh* Mesh)
 	CDO->mDisplayName = FText::FromString(ClassName);
 	CDO->mDescription = FText::FromString(Mesh->GetPathName());
 	CDO->mHologramClass = HologramClass;
-	CDO->mInteractWidgetClass = InteractWidgetClass;
+	CDO->mInteractWidgetSoftClass = InteractWidgetClass;
 	CDO->FallbackMaterial = FallbackMaterial;
 	CDO->CollisionProfile = CollisionProfile;
 	CDO->SetMesh(Mesh);

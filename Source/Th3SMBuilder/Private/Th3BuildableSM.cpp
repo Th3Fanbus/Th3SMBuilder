@@ -19,7 +19,7 @@ ATh3BuildableSM::ATh3BuildableSM(const FObjectInitializer& ObjectInitializer) : 
 		Mesh = CDO->Mesh;
 		mDisplayName = CDO->mDisplayName;
 		mHologramClass = CDO->mHologramClass;
-		mInteractWidgetClass = CDO->mInteractWidgetClass;
+		mInteractWidgetSoftClass = CDO->mInteractWidgetSoftClass;
 		FallbackMaterial = CDO->FallbackMaterial;
 		CollisionProfile = CDO->CollisionProfile;
 		if (not Mesh) {
